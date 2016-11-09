@@ -17,28 +17,40 @@ public class Game {
 
 	public int score() {
 		int score = 0;
-		int cursor = 0;
+		int frameCursor = 0;
 		for (int frame = 0; frame < 10; frame++) {
-			if (isStrike(cursor)) {
-				score += 10 + rolls[cursor+1] + rolls[cursor+2];
-				cursor++;
-			} else if (isSpare(cursor)) { 
-				score += 10 + rolls[cursor+2];
-				cursor += 2;
+			if (isStrike(frameCursor)) {
+				score += 10 + bonusScoreForAStrike(frameCursor);
+				frameCursor++;
+			} else if (isSpare(frameCursor)) { 
+				score += 10 + bonusScoreForASpare(frameCursor);
+				frameCursor += 2;
 			} else {
-				score += rolls[cursor] + rolls[cursor+1];
-				cursor += 2;
+				score += normalScoreForAFrame(frameCursor);
+				frameCursor += 2;
 			}
 		}
 		return score;
 	}
 
-	private boolean isStrike(int cursor) {
-		return rolls[cursor] == 10;
+	private int bonusScoreForAStrike(int frameCursor) {
+		return rolls[frameCursor+1] + rolls[frameCursor+2];
 	}
 
-	private boolean isSpare(int cursor) {
-		return rolls[cursor] + rolls[cursor+1] == 10;
+	private int bonusScoreForASpare(int frameCursor) {
+		return rolls[frameCursor+2];
+	}
+
+	private int normalScoreForAFrame(int frameCursor) {
+		return rolls[frameCursor] + rolls[frameCursor+1];
+	}
+
+	private boolean isStrike(int frameCursor) {
+		return rolls[frameCursor] == 10;
+	}
+
+	private boolean isSpare(int frameCursor) {
+		return normalScoreForAFrame(frameCursor) == 10;
 	}
 
 }
